@@ -1,0 +1,29 @@
+services:
+  ## Rabbit
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - simple-ecommerce
+  ## Postgres
+  postgres:
+   container_name: postgres
+   image: postgres:13-alpine
+   restart: unless-stopped
+   ports:
+    - '5432:5432'
+   environment:
+    - POSTGRES_USER=postgress
+    - POSTGRES_PASSWORD=postgress
+   volumes:
+      - ./infrastructure/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+   networks:
+    - simple-ecommerce
+
+
+networks:
+  simple-ecommerce:
