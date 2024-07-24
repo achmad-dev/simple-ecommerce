@@ -42,6 +42,7 @@ func (s *baseOrderService) CreateOrder(email string) error {
 
 	var totalPrice int
 	carts, err := s.cartRepo.GetCartByUserID(user.Id)
+
 	if err != nil {
 		s.log.Errorf("Error getting cart by user ID %d: %v", user.Id, err)
 		return err

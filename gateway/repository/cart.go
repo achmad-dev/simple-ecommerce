@@ -31,7 +31,7 @@ func (r *baseCartRepository) RemoveProductFromCart(userID, productID int) error 
 }
 
 func (r *baseCartRepository) GetCartByUserID(userID int) ([]domain.CartItem, error) {
-	rows, err := r.db.Query("SELECT product_id FROM simple_ecommerce.cart WHERE user_id = $1", userID)
+	rows, err := r.db.Query("SELECT id, product_id FROM simple_ecommerce.cart WHERE user_id = $1", userID)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (r *baseCartRepository) GetCartByUserID(userID int) ([]domain.CartItem, err
 	var cartItems []domain.CartItem
 	for rows.Next() {
 		var cartItem domain.CartItem
-		if err := rows.Scan(&cartItem.ProductID); err != nil {
+		if err := rows.Scan(&cartItem.Id, &cartItem.ProductID); err != nil {
 			return nil, err
 		}
 		cartItems = append(cartItems, cartItem)

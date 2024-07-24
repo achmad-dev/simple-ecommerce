@@ -22,7 +22,11 @@ func NewOrderRepository(db *sql.DB) OrderRepository {
 }
 
 func (r *baseOrderRepository) CreateOrder(userID int, cartIDs []int, paymentMethodID int, totalPrice int) error {
-	_, err := r.db.Exec("INSERT INTO simple_ecommerce.order (user_id, cart_ids, payment_method_id, total_price) VALUES ($1, $2, $3, $4)", userID, pq.Array(cartIDs), paymentMethodID, totalPrice)
+	int64Slice := make([]int64, len(cartIDs))
+	for i, v := range cartIDs {
+		int64Slice[i] = int64(v)
+	}
+	_, err := r.db.Exec("INSERT INTO simple_ecommerce.order (user_id, cart_ids, payment_method_id, total_price, is_paid) VALUES ($1, $2, $3, $4, $5)", userID, pq.Int64Array(int64Slice), paymentMethodID, totalPrice, false)
 	return err
 }
 
@@ -36,8 +40,22 @@ func (r *baseOrderRepository) GetOrdersByUserID(userID int) ([]domain.Order, err
 	var orders []domain.Order
 	for rows.Next() {
 		var order domain.Order
-		if err := rows.Scan(&order.ID, &order.UserID, pq.Array(&order.CartIDs), &order.PaymentMethodID, &order.TotalPrice, &order.IsPaid, &order.CreatedAt, &order.UpdatedAt); err != nil {
+		var cartIDs pq.Int64Array
+		if err := rows.Scan(
+			&order.ID,
+			&order.UserID,
+			&cartIDs,
+			&order.PaymentMethodID,
+			&order.TotalPrice,
+			&order.IsPaid,
+			&order.CreatedAt,
+			&order.UpdatedAt,
+		); err != nil {
 			return nil, err
+		}
+		order.CartIDs = make([]int, len(cartIDs))
+		for i, v := range cartIDs {
+			order.CartIDs[i] = int(v)
 		}
 		orders = append(orders, order)
 	}
