@@ -1,3 +1,10 @@
+-- Create the database
+CREATE DATABASE simple_ecommerce;
+
+-- Switch to the simple_ecommerce database
+\c simple_ecommerce
+
+
 CREATE SCHEMA simple_ecommerce;
 
 CREATE TABLE IF NOT EXISTS simple_ecommerce.user (

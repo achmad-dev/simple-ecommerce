@@ -27,7 +27,7 @@ func (b *baseUserRepository) RegisterUser(user_dto dto.AuthUserDto) error {
 		return err
 	}
 
-	_, err = b.db.Exec("INSERT INTO simple_ecommerce.user (username, password) VALUES ($1, $2)", user_dto.Email, string(hashedPassword))
+	_, err = b.db.Exec("INSERT INTO simple_ecommerce.user (email, password_hash) VALUES ($1, $2)", user_dto.Email, string(hashedPassword))
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func (b *baseUserRepository) RegisterUser(user_dto dto.AuthUserDto) error {
 
 func (b *baseUserRepository) GetUserByEmail(email string) (*domain.User, error) {
 	var storedUser domain.User
-	err := b.db.QueryRow("SELECT id, username, password FROM simple_ecommerce.user WHERE username = $1", email).Scan(&storedUser.Id, &storedUser.Email, &storedUser.PasswordHash)
+	err := b.db.QueryRow("SELECT id, email, password_hashFROM simple_ecommerce.user WHERE email = $1", email).Scan(&storedUser.Id, &storedUser.Email, &storedUser.PasswordHash)
 	if err != nil {
 		return nil, err
 	}
