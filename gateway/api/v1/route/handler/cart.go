@@ -35,7 +35,7 @@ func (h *CartHandler) AddProductToCart(c echo.Context) error {
 func (h *CartHandler) RemoveProductFromCart(c echo.Context) error {
 	userEmail := c.Get("email").(string)
 
-	productID, err := strconv.Atoi(c.Param("productID"))
+	productID, err := strconv.Atoi(c.FormValue("productID"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response.NewErrorResponse("Invalid product ID", err))
 	}
@@ -46,18 +46,4 @@ func (h *CartHandler) RemoveProductFromCart(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, response.NewSuccessResponse("Product removed from cart"))
-}
-
-func (h *CartHandler) GetCartByUserID(c echo.Context) error {
-	userID, err := strconv.Atoi(c.Param("userID"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, response.NewErrorResponse("Invalid user ID", err))
-	}
-
-	cartItems, err := h.cartService.GetCartByUserID(userID)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, response.NewErrorResponse("Failed to fetch cart items", err))
-	}
-
-	return c.JSON(http.StatusOK, response.NewSuccessResponse(cartItems))
 }
