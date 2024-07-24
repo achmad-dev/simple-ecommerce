@@ -34,6 +34,7 @@ func (s *baseProductService) FetchAllProducts() ([]domain.Product, error) {
 
 func (s *baseProductService) FetchProductsPaginated(limit, offset int) ([]domain.Product, error) {
 	s.log.Infof("Fetching products with limit %d and offset %d", limit, offset)
+	offset = (offset - 1) * limit
 	products, err := s.productRepo.FetchProductsPaginated(limit, offset)
 	if err != nil {
 		s.log.Errorf("Error fetching paginated products: %v", err)
