@@ -36,7 +36,7 @@ func (b *baseUserRepository) RegisterUser(user_dto dto.AuthUserDto) error {
 
 func (b *baseUserRepository) GetUserByEmail(email string) (*domain.User, error) {
 	var storedUser domain.User
-	err := b.db.QueryRow("SELECT id, email, password_hashFROM simple_ecommerce.user WHERE email = $1", email).Scan(&storedUser.Id, &storedUser.Email, &storedUser.PasswordHash)
+	err := b.db.QueryRow("SELECT id, email, password_hash FROM simple_ecommerce.user WHERE email = $1", email).Scan(&storedUser.Id, &storedUser.Email, &storedUser.PasswordHash)
 	if err != nil {
 		return nil, err
 	}

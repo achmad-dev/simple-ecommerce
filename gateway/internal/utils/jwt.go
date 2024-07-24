@@ -17,11 +17,11 @@ type JwtHelper interface {
 }
 
 type baseJwtHelper struct {
-	SecretKey string
+	SecretKey []byte
 }
 
 func NewJwtHelper(secret string) JwtHelper {
-	return &baseJwtHelper{SecretKey: secret}
+	return &baseJwtHelper{SecretKey: []byte(secret)}
 }
 
 func (b *baseJwtHelper) GenerateToken(email string) (string, error) {
