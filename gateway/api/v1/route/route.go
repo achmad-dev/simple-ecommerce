@@ -40,7 +40,7 @@ func ServeRoute() {
 
 	// Set up services
 	cartService := service.NewCartService(cartRepo, userRepo, log)
-	orderService := service.NewOrderService(orderRepo, cartRepo, productRepo, log)
+	orderService := service.NewOrderService(orderRepo, cartRepo, userRepo, paymentRepo, productRepo, log)
 	paymentService := service.NewPaymentService(paymentRepo, log)
 	productService := service.NewProductService(productRepo, log)
 	userService := service.NewUserService(userRepo, log)
@@ -66,10 +66,11 @@ func ServeRoute() {
 
 	protected.GET("/home", productHandler.FetchAllProducts)
 	protected.GET("/home-paginate", productHandler.FetchProductsPaginated)
-	protected.POST("/cart/:productID", cartHandler.AddProductToCart)
-	protected.DELETE("/cart/:productID", cartHandler.RemoveProductFromCart)
-	protected.POST("/orders/:orderID/pay", orderHandler.PayOrder)
-	protected.GET("/orders/:userID", orderHandler.GetOrdersByUserID)
+	protected.POST("/cart", cartHandler.AddProductToCart)
+	protected.DELETE("/cart/:productId", cartHandler.RemoveProductFromCart)
+	protected.POST("/orders/create", orderHandler.CreateOrder)
+	protected.PUT("/orders/:orderID/pay", orderHandler.PayOrder)
+	protected.GET("/orders/user", orderHandler.GetOrdersByUserID)
 
 	// Start the server
 	port := os.Getenv("PORT")

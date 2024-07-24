@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS simple_ecommerce.payment_method (
 CREATE TABLE IF NOT EXISTS simple_ecommerce.order (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
-    cart_id INT[] NOT NULL,
+    cart_ids INT[] NOT NULL,
     payment_method_id INT NOT NULL,
     total_price INT NOT NULL,
     is_paid BOOLEAN,

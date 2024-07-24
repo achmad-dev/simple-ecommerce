@@ -35,7 +35,7 @@ func (h *CartHandler) AddProductToCart(c echo.Context) error {
 func (h *CartHandler) RemoveProductFromCart(c echo.Context) error {
 	userEmail := c.Get("email").(string)
 
-	productID, err := strconv.Atoi(c.FormValue("productID"))
+	productID, err := strconv.Atoi(c.Param("productId"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response.NewErrorResponse("Invalid product ID", err))
 	}
